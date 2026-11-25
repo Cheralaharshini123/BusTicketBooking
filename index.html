@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BusGo - Online Bus Booking</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f3f6fb;color:#202b40}
+header{background:#102b50;color:white;padding:22px 8%;display:flex;justify-content:space-between;align-items:center}
+header h2{color:#ffbd45}
+nav a{color:white;text-decoration:none;margin-left:20px}
+.hero{background:linear-gradient(120deg,#123b68,#176c9c);color:white;text-align:center;padding:55px 15px}
+.hero h1{font-size:36px;margin-bottom:12px}
+.hero p{color:#dceaff}
+.container{max-width:950px;margin:30px auto;padding:25px}
+.booking{background:white;padding:28px;border-radius:14px;box-shadow:0 5px 20px #0001}
+.booking h2{margin-bottom:20px;color:#173b64}
+.form{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+label{font-weight:bold;font-size:14px}
+input,select{width:100%;padding:12px;margin-top:8px;border:1px solid #ccd5e0;border-radius:7px}
+button{background:#ffad32;color:#172c45;border:0;padding:13px 22px;border-radius:7px;font-weight:bold;cursor:pointer}
+button:hover{background:#f59a13}
+.search{margin-top:20px;width:100%}
+.results{margin-top:25px}
+.bus{background:#fff;padding:20px;margin:15px 0;border-radius:10px;border:1px solid #e0e6ef;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.bus h3{margin-bottom:8px}
+.bus p{color:#66758a;font-size:14px;line-height:1.6}
+.price{font-size:20px;color:#176c9c;font-weight:bold}
+footer{text-align:center;background:#102b50;color:white;padding:22px;margin-top:45px}
+@media(max-width:600px){.form{grid-template-columns:1fr}header{padding:18px;flex-direction:column;gap:12px}nav a{margin:0 8px}.hero h1{font-size:28px}.bus{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<header>
+<h2>🚌 BusGo</h2>
+<nav>
+<a href="#">Home</a>
+<a href="#booking">Book Tickets</a>
+<a href="#results">Buses</a>
+</nav>
+</header>
+
+<section class="hero">
+<h1>Travel Easy, Travel Smart!</h1>
+<p>Book your bus tickets online in just a few clicks.</p>
+</section>
+
+<main class="container">
+<section class="booking" id="booking">
+<h2>Search & Book Your Bus</h2>
+<form id="busForm">
+<div class="form">
+<div>
+<label for="from">From</label>
+<select id="from" required>
+<option value="">Select source</option>
+<option>Hyderabad</option>
+<option>Warangal</option>
+<option>Vijayawada</option>
+<option>Bangalore</option>
+<option>Chennai</option>
+</select>
+</div>
+<div>
+<label for="to">To</label>
+<select id="to" required>
+<option value="">Select destination</option>
+<option>Hyderabad</option>
+<option>Warangal</option>
+<option>Vijayawada</option>
+<option>Bangalore</option>
+<option>Chennai</option>
+</select>
+</div>
+<div>
+<label for="date">Journey Date</label>
+<input type="date" id="date" required>
+</div>
+<div>
+<label for="seats">Number of Seats</label>
+<input type="number" id="seats" min="1" max="6" value="1" required>
+</div>
+</div>
+<button class="search" type="submit">Search Buses</button>
+</form>
+</section>
+
+<section class="results" id="results">
+<h2>Available Buses</h2>
+<div id="busList">
+<p style="margin-top:12px;color:#66758a">Enter your journey details to find buses.</p>
+</div>
+</section>
+</main>
+
+<footer>
+<p>© 2026 BusGo | Online Bus Ticket Booking System</p>
+<p>Designed using HTML, CSS and JavaScript</p>
+</footer>
+
+<script>
+const buses=[
+{name:"Express Travels",time:"08:00 AM",type:"AC Sleeper",price:750,seats:20},
+{name:"Royal Bus Service",time:"10:30 AM",type:"Non-AC Seater",price:500,seats:15},
+{name:"GreenLine Travels",time:"09:00 PM",type:"AC Sleeper",price:950,seats:12}
+];
+
+document.getElementById("date").min=new Date().toISOString().split("T")[0];
+
+document.getElementById("busForm").addEventListener("submit",function(e){
+e.preventDefault();
+
+const from=document.getElementById("from").value;
+const to=document.getElementById("to").value;
+const date=document.getElementById("date").value;
+const seats=Number(document.getElementById("seats").value);
+const list=document.getElementById("busList");
+
+if(from===to){
+alert("Source and destination cannot be the same!");
+return;
+}
+
+list.innerHTML="";
+
+buses.forEach((bus,index)=>{
+const card=document.createElement("div");
+card.className="bus";
+card.innerHTML=`
+<div>
+<h3>${bus.name}</h3>
+<p>${from} → ${to}</p>
+<p>${bus.time} | ${bus.type}</p>
+<p>Available seats: ${bus.seats}</p>
+</div>
+<div>
+<p class="price">₹${bus.price*seats}</p>
+<button type="button" class="book">Book Now</button>
+</div>`;
+card.querySelector(".book").addEventListener("click",()=>{
+if(seats>bus.seats){
+alert("Not enough seats available!");
+return;
+}
+alert("Demo booking successful!\\nBus: "+bus.name+
+"\\nRoute: "+from+" to "+to+
+"\\nDate: "+date+
+"\\nSeats: "+seats+
+"\\nTotal: ₹"+(bus.price*seats));
+});
+list.appendChild(card);
+});
+
+document.getElementById("results").scrollIntoView({behavior:"smooth"});
+});
+</script>
+</body>
+</html>
